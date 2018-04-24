@@ -19,13 +19,16 @@ def CoinRedirView(request, id=None):
     if request.method == 'POST':
         #add to database
         custom = clean(request.POST['customUrl'])
-        url1 = request.POST['url1']
-        url2 = request.POST['url2']
-        obj = CoinRedirectModel.objects.create(customUrl=custom, url1=url1, url2=url2)
-        obj.save()
-        return render(request, 'complete.html', {
-            'url': 'https://urlt.herokuapp.com/c/' + custom
-        })
+        if custom:
+            url1 = request.POST['url1']
+            url2 = request.POST['url2']
+            obj = CoinRedirectModel.objects.create(customUrl=custom, url1=url1, url2=url2)
+            obj.save()
+            return render(request, 'complete.html', {
+                'url': 'https://urlt.herokuapp.com/c/' + custom
+            })
+        else:
+            raise ValueError("Disallowed custom URL")
     else:
         #Search or return empty
         if id:
