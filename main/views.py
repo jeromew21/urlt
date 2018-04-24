@@ -49,12 +49,15 @@ def BasicRedirView(request, id=None):
     if request.method == 'POST':
         #add to database
         custom = clean(request.POST['customUrl'])
-        url = request.POST['url']
-        obj = BasicUrlModel.objects.create(customUrl=custom, url=url)
-        obj.save()
-        return render(request, 'complete.html', {
-            'url': 'https://urlt.herokuapp.com/' + custom
-        })
+        if custom:
+            url = request.POST['url']
+            obj = BasicUrlModel.objects.create(customUrl=custom, url=url)
+            obj.save()
+            return render(request, 'complete.html', {
+                'url': 'https://urlt.herokuapp.com/' + custom
+            })
+        else:
+            raise ValueError("Disallowed custom URL")
     else:
         #Search or return empty
         if id:
